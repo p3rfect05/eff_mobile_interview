@@ -63,7 +63,7 @@ func DeleteCarByRegNum(regNum string) error {
 
 func InsertCarInfo(car Car) (string, error) {
 
-	res := db.Create(&car) 
+	res := db.Create(&car)
 
 	if res.Error != nil {
 		return "", res.Error
@@ -72,6 +72,15 @@ func InsertCarInfo(car Car) (string, error) {
 	return car.RegNum, nil
 }
 
+func GetCarsByFilters(car Car) ([]Car, error) {
+	var cars []Car
+	res := db.Where(car).Find(&cars)
+	if res.Error != nil {
+		return cars, res.Error
+	}
+
+	return cars, nil
+}
 func GetCarByRegNum(regNum string) (*Car, error) {
 	var car Car
 	res := db.First(&car, regNum)

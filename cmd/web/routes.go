@@ -12,7 +12,7 @@ func router(app *AppConfig) http.Handler {
 	mux.Get("/info", Info)
 	//mux.Get("/Cars/{CarID}", CarOne)
 
-	mux.Get("/cars", Cars)
+	mux.Get("/cars", GetCars)
 	mux.Post("/cars", PostCars)
 
 	mux.Patch("/cars", PatchCars)

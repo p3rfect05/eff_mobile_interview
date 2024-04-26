@@ -21,23 +21,47 @@ func Info(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(car)
 
 }
-func Cars(w http.ResponseWriter, r *http.Request) {
-
+func GetCars(w http.ResponseWriter, r *http.Request) {
+	var searchCar Car
+	err := json.NewDecoder(r.Body).Decode(&searchCar)
+	if err != nil {
+		app.ErrorLog.Println("error while decoding car object in PatchCars")
+		return
+	}
+	matchedCars, err := GetCarsByFilters(searchCar)
+	if err != nil {
+		app.ErrorLog.Println("error while getting cars by filters:", err)
+		return
+	}
+	app.InfoLog.Printf("found %d cars matching the request\n", len(matchedCars))
 }
 
 func PostCars(w http.ResponseWriter, r *http.Request) {
-	var newCar Car
-	err := json.NewDecoder(r.Body).Decode(&newCar)
+	type jsonReq struct {
+		RegNums []string `json:"regNums"`
+	}
+	var carNumbers jsonReq
+	err := json.NewDecoder(r.Body).Decode(&carNumbers)
 	if err != nil {
-		app.ErrorLog.Println("error while decoding car object in PostCars")
+		app.ErrorLog.Println("error while decoding regNums[] in PostCars")
 		return
 	}
-	newCarID, err := InsertCarInfo(newCar)
-	if err != nil {
-		app.ErrorLog.Println("error while inserting car:", err)
-	} else {
-		app.InfoLog.Println("inserted car with regNum:", newCarID)
+
+	for _, newCarID := range carNumbers.RegNums {
+		newCar, err := getCarInfoByRegNum(newCarID)
+		if err != nil {
+			app.ErrorLog.Println("error while getting car info via API:", err)
+			continue
+		}
+		_, err = InsertCarInfo(newCar)
+
+		if err != nil {
+			app.ErrorLog.Println("error while inserting car:", err)
+		} else {
+			app.InfoLog.Println("inserted car with regNum:", newCarID)
+		}
 	}
+
 }
 
 func PatchCars(w http.ResponseWriter, r *http.Request) {
@@ -61,7 +85,7 @@ func DeleteCars(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		app.ErrorLog.Printf("error while deleting car with regNum:%s: %s\n", regNumToDelete, err)
 	} else {
-		app.InfoLog.Printf("deleted car with regNum", regNumToDelete)
+		app.InfoLog.Printf("deleted car with regNum:%s\n", regNumToDelete)
 	}
 
 }

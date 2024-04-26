@@ -8,8 +8,8 @@ import (
 
 const externalApiURL = "http://localhost/info"
 
-func getCarInfoByRegNum(regNum string, app *AppConfig) {
-
+func getCarInfoByRegNum(regNum string) (Car, error) {
+	car := Car{}
 	req, _ := http.NewRequest("GET", externalApiURL, nil)
 	req.URL.RawQuery = url.Values{
 		"regNum": {regNum},
@@ -19,20 +19,23 @@ func getCarInfoByRegNum(regNum string, app *AppConfig) {
 
 	if err != nil {
 		app.ErrorLog.Println(err)
-		return
+		return car, err
 	}
 
 	if resp.StatusCode != 200 {
 		app.ErrorLog.Printf("error while getting %s?regNum=%s: %d\n", externalApiURL, regNum, resp.StatusCode)
-		return
+		return car, err
 	}
-	car := Car{}
+
 	err = json.NewDecoder(resp.Body).Decode(&car)
 
 	if err != nil {
 		app.ErrorLog.Println("could not decode response:", err)
+		return car, err
 	}
 
 	app.InfoLog.Println("response acquired successfully")
+
+	return car, nil
 
 }
