@@ -32,7 +32,7 @@ func main() {
 	app.InfoLog.Println("Connected to database")
 	srv := &http.Server{
 		Addr:    ":8080",
-		Handler: router(&app),
+		Handler: router(),
 	}
 
 	InitConn(app.DB) // чтобы впоследствии в файле models.go обращаться через db.

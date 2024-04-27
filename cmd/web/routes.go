@@ -6,13 +6,14 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func router(app *AppConfig) http.Handler {
+// router устанавливает REST ресурсы с соответствующими HTTP-методами
+func router() http.Handler {
 	mux := chi.NewRouter()
 
-	mux.Get("/info", Info)
-	//mux.Get("/Cars/{CarID}", CarOne)
+	//mux.Get("/info", Info)
 
 	mux.Get("/cars", GetCars)
+
 	mux.Post("/cars", PostCars)
 
 	mux.Patch("/cars", PatchCars)

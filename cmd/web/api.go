@@ -6,9 +6,11 @@ import (
 	"net/url"
 )
 
-const externalApiURL = "http://localhost/info"
+const externalApiURL = "https://<your-domain>/info"
 
-func getCarInfoByRegNum(regNum string) (Car, error) {
+
+// GetCarInfoByRegNum - функция для получения информации об автомобиле от внешнего API
+func GetCarInfoByRegNum(regNum string) (Car, error) {
 	car := Car{}
 	req, _ := http.NewRequest("GET", externalApiURL, nil)
 	req.URL.RawQuery = url.Values{
@@ -35,6 +37,24 @@ func getCarInfoByRegNum(regNum string) (Car, error) {
 	}
 
 	app.InfoLog.Println("response acquired successfully")
+
+	return car, nil
+
+}
+
+
+// TestGetCarInfoByRegNum - имитация функции GetCarInfoByRegNum
+func TestGetCarInfoByRegNum(regNum string) (Car, error) {
+	car := Car{
+		RegNum: regNum,
+		Mark:   "lada",
+		Model:  "vesta",
+		Owner: Owner{
+			Name:       "alex",
+			Surname:    "v",
+			Patronymic: "what the hell is patronymic",
+		},
+	}
 
 	return car, nil
 
