@@ -4,20 +4,25 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 // router устанавливает REST ресурсы с соответствующими HTTP-методами
 func router() http.Handler {
 	mux := chi.NewRouter()
+	domain := "http://localhost:80"
+	mux.Get("/swagger/*", httpSwagger.Handler(
 
-	//mux.Get("/info", Info)
+		httpSwagger.URL(domain+"/swagger/doc.json"), //The url pointing to API definition
+	))
 
-	mux.Get("/cars", GetCars)
+	mux.Get("/api/v1/cars", GetCars)
 
-	mux.Post("/cars", PostCars)
+	mux.Post("/api/v1/cars", PostCars)
 
-	mux.Patch("/cars", PatchCars)
+	mux.Patch("/api/v1/cars", PatchCars)
 
-	mux.Delete("/cars/{carID}", DeleteCars)
+	mux.Delete("/api/v1/cars/{carID}", DeleteCars)
+
 	return mux
 }

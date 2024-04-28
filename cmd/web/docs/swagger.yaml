@@ -1,0 +1,200 @@
+basePath: /api/v1
+definitions:
+  main.Car:
+    properties:
+      mark:
+        type: string
+      model:
+        type: string
+      owner:
+        $ref: '#/definitions/main.Owner'
+      reg_num:
+        type: string
+      year:
+        type: integer
+    type: object
+  main.Owner:
+    properties:
+      name:
+        type: string
+      patronymic:
+        type: string
+      surname:
+        type: string
+    type: object
+  main.errorJson:
+    properties:
+      error_message:
+        type: string
+    type: object
+  main.foundCarsJsons:
+    properties:
+      cars:
+        items:
+          $ref: '#/definitions/main.Car'
+        type: array
+      limit:
+        type: integer
+      page:
+        type: integer
+      per_page:
+        type: integer
+      total:
+        type: integer
+    type: object
+  main.infoJson:
+    properties:
+      info_message:
+        type: string
+    type: object
+  main.updatedCarJson:
+    properties:
+      car:
+        $ref: '#/definitions/main.Car'
+      tota:
+        type: integer
+    type: object
+host: localhost:80
+info:
+  contact: {}
+  description: Это описание API для работы с каталогом автомобилей
+  title: Cars Swagger API
+  version: "1.0"
+paths:
+  /cars:
+    get:
+      consumes:
+      - application/json
+      description: GetCars возвращает список объектов Car, которые совпадают с переданнами
+        URL-параметрами
+      parameters:
+      - description: Рег. номер
+        in: query
+        name: reg_num
+        type: string
+      - description: Марка машины
+        in: query
+        name: mark
+        type: string
+      - description: Модель машины
+        in: query
+        name: model
+        type: string
+      - description: Год производства
+        in: query
+        name: year
+        type: integer
+      - description: Страница (по умолчанию 1)
+        in: query
+        name: page
+        type: integer
+      - description: Макс. записей с указанной страницы
+        in: query
+        name: limit
+        type: integer
+      - description: Имя владельца
+        in: query
+        name: owner_name
+        type: string
+      - description: Фамилия владельца
+        in: query
+        name: owner_surname
+        type: string
+      - description: Отчество владельца
+        in: query
+        name: owner_patronymic
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.foundCarsJsons'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.errorJson'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.errorJson'
+      summary: Get lists of request-matched car
+      tags:
+      - cars
+    patch:
+      consumes:
+      - application/json
+      description: PatchCars изменяет указанные поля объекта Car по переданному номеру
+        regNum
+      parameters:
+      - description: Рег. номер
+        in: body
+        name: reg_num
+        required: true
+        schema:
+          type: integer
+      - description: Марка машины
+        in: body
+        name: mark
+        schema:
+          type: string
+      - description: Модель машины
+        in: body
+        name: model
+        schema:
+          type: string
+      - description: Год производства
+        in: body
+        name: year
+        schema:
+          type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.updatedCarJson'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.errorJson'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.errorJson'
+      summary: Updates a car
+      tags:
+      - cars
+  /cars/{carID}:
+    delete:
+      consumes:
+      - application/json
+      description: DeleteCars удаляет объект Car с номером regNum, переданным в URL
+        params
+      parameters:
+      - description: Registration number
+        in: path
+        name: reg_num
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.infoJson'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.errorJson'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.errorJson'
+      summary: Delete a car
+      tags:
+      - cars
+swagger: "2.0"

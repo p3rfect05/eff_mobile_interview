@@ -18,7 +18,7 @@ type Owner struct {
 
 // Car - схема таблицы cars в БД
 type Car struct {
-	RegNum  string `json:"regNum" gorm:"primaryKey"`
+	RegNum  string `json:"reg_num" gorm:"primaryKey"`
 	Mark    string `json:"mark"`
 	Model   string `json:"model"`
 	Year    int    `json:"year,omitempty"`
@@ -122,7 +122,7 @@ func GetCarsByFilters(car Car) ([]Car, error) {
 // или ошибку: внутренняя ошибка БД или ошибка, если не найдено ни одного совпадения
 func GetCarByRegNum(regNum string) (*Car, error) {
 	var car Car
-	res := db.First(&car, "reg_num = ?", regNum) // чтобы избежать SQL-инъекций
+	res := db.Preload("Owner").First(&car, "reg_num = ?", regNum) // чтобы избежать SQL-инъекций
 	if errors.Is(res.Error, gorm.ErrRecordNotFound) {
 
 		return nil, res.Error

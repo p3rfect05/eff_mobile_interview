@@ -14,6 +14,8 @@ type AppConfig struct {
 	DB       *gorm.DB
 }
 
+const Port = "8080"
+
 var app AppConfig
 
 func main() {
@@ -31,7 +33,7 @@ func main() {
 	app.DB = conn
 	app.InfoLog.Println("Connected to database")
 	srv := &http.Server{
-		Addr:    ":8080",
+		Addr:    ":" + Port,
 		Handler: router(),
 	}
 
@@ -40,6 +42,6 @@ func main() {
 	if err != nil {
 		app.ErrorLog.Fatalln("Failed to migrate tables...")
 	}
-	app.InfoLog.Println("Starting the server on port 80")
+	app.InfoLog.Println("Starting the server on port", Port)
 	srv.ListenAndServe()
 }
