@@ -47,11 +47,27 @@ definitions:
       info_message:
         type: string
     type: object
+  main.insertedCarsJson:
+    properties:
+      cars:
+        items:
+          $ref: '#/definitions/main.Car'
+        type: array
+      total:
+        type: integer
+    type: object
+  main.postCarReq:
+    properties:
+      reg_nums:
+        items:
+          type: string
+        type: array
+    type: object
   main.updatedCarJson:
     properties:
       car:
         $ref: '#/definitions/main.Car'
-      tota:
+      total:
         type: integer
     type: object
 host: localhost:80
@@ -165,6 +181,36 @@ paths:
           schema:
             $ref: '#/definitions/main.errorJson'
       summary: Updates a car
+      tags:
+      - cars
+    post:
+      consumes:
+      - application/json
+      description: PostCars добавляет объекты Car, с номерами, указанными в списке
+        поля reg_nums
+      parameters:
+      - description: Рег. номер
+        in: body
+        name: reg_nums
+        required: true
+        schema:
+          $ref: '#/definitions/main.postCarReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.insertedCarsJson'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.errorJson'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.errorJson'
+      summary: Creates a car
       tags:
       - cars
   /cars/{carID}:

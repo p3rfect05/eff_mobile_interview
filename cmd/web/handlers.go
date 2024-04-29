@@ -251,7 +251,7 @@ func GetCars(w http.ResponseWriter, r *http.Request) {
 //	@Success		200			{object}	insertedCarsJson
 //	@Failure		400			{object}	errorJson
 //	@Failure		500			{object}	errorJson
-//	@Router			/api/v1/cars      [post]
+//	@Router			/cars      [post]
 func PostCars(w http.ResponseWriter, r *http.Request) {
 
 	carNumbers := postCarReq{
@@ -338,7 +338,7 @@ func PostCars(w http.ResponseWriter, r *http.Request) {
 //	@Success		200		{object}	updatedCarJson
 //	@Failure		400		{object}	errorJson
 //	@Failure		500		{object}	errorJson
-//	@Router			/api/v1/cars     [patch]
+//	@Router			/cars     [patch]
 func PatchCars(w http.ResponseWriter, r *http.Request) {
 	var newCar Car
 	dec := json.NewDecoder(r.Body)
@@ -400,7 +400,7 @@ func PatchCars(w http.ResponseWriter, r *http.Request) {
 //	@Success		200		{object}	infoJson
 //	@Failure		400		{object}	errorJson
 //	@Failure		500		{object}	errorJson
-//	@Router			/api/v1/cars/{carID}      [delete]
+//	@Router			/cars/{carID}      [delete]
 func DeleteCars(w http.ResponseWriter, r *http.Request) {
 	regNumToDelete := chi.URLParam(r, "carID")
 	if len(regNumToDelete) == 0 {

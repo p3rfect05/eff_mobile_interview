@@ -105,6 +105,50 @@ const docTemplate = `{
                     }
                 }
             },
+            "post": {
+                "description": "PostCars добавляет объекты Car, с номерами, указанными в списке поля reg_nums",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cars"
+                ],
+                "summary": "Creates a car",
+                "parameters": [
+                    {
+                        "description": "Рег. номер",
+                        "name": "reg_nums",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.postCarReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.insertedCarsJson"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/main.errorJson"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/main.errorJson"
+                        }
+                    }
+                }
+            },
             "patch": {
                 "description": "PatchCars изменяет указанные поля объекта Car по переданному номеру regNum",
                 "consumes": [
@@ -293,13 +337,38 @@ const docTemplate = `{
                 }
             }
         },
+        "main.insertedCarsJson": {
+            "type": "object",
+            "properties": {
+                "cars": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/main.Car"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "main.postCarReq": {
+            "type": "object",
+            "properties": {
+                "reg_nums": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
         "main.updatedCarJson": {
             "type": "object",
             "properties": {
                 "car": {
                     "$ref": "#/definitions/main.Car"
                 },
-                "tota": {
+                "total": {
                     "type": "integer"
                 }
             }
